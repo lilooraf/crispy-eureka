@@ -1,0 +1,47 @@
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+tr.active {
+  background-color: #00FF00;
+}
+
+tr.cancelled {
+  background-color: #FF0000;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.overflow-auto {
+  flex: 1;
+  overflow: auto;
+}
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.sticky {
+  z-index: 1000;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.bg-white {
+  background-color: white;
+}
+
+.uuid-input {
+  width: 20rem;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
