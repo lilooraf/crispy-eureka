@@ -23,7 +23,7 @@ const useReservations = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [getReservations]);
 
   return { data, loading, error, fetchReservations };
 };
