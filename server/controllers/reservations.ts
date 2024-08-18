@@ -2,11 +2,18 @@ import { Request, Response } from 'express';
 import ChargeModel, { Charge } from '../models/Charge';
 import AssignmentModel, { Assignment } from '../models/Assignment';
 
+export enum ChargeStatus {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+  ASSIGNED_ONLY = 'assigned_only'
+}
+
 type Product = {
   id: number,
   name: string,
   amount: number,
-  status: boolean
+  status: boolean,
+  productStatus: ChargeStatus
 }
 
 type Reservation = {
@@ -40,18 +47,31 @@ const getReservationTable = async (req: Request, res: Response): Promise<void> =
     const reservations: Reservation[] = Array.from(groupedAssignmentsMap.entries()).map(([reservation_uuid, assignments]) => {
       const products: Product[] = assignments.map(assignment => {
         const relatedCharge = charges.find(charge => charge.special_product_assignment_id === assignment.id);
+
+        let productStatus: ChargeStatus;
+
+        if (!relatedCharge) {
+          productStatus = ChargeStatus.ASSIGNED_ONLY;
+        } else if (relatedCharge?.active) {
+          productStatus = ChargeStatus.ACTIVE;
+        } else {
+          productStatus = ChargeStatus.INACTIVE;
+        }
+
         return {
           id: assignment.id,
           name: assignment.name,
           amount: relatedCharge?.amount || 0,
-          status: relatedCharge?.active || false
+          status: relatedCharge?.active || false,
+          productStatus
         };
       });
 
+      const active_purchases = products.filter(product => product.productStatus === ChargeStatus.ACTIVE);
       return {
         reservation_uuid,
-        active_purchases_count: products.filter(product => product.status).length,
-        active_purchases_sum: products.reduce((acc, product) => acc + product.amount, 0),
+        active_purchases_count: active_purchases.length,
+        active_purchases_sum: active_purchases.reduce((acc, product) => acc + product.amount, 0),
         products
       };
     });

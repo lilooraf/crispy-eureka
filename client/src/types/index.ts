@@ -1,8 +1,15 @@
+export enum ChargeStatus {
+    ACTIVE = 'active',
+    INACTIVE = 'inactive',
+    ASSIGNED_ONLY = 'assigned_only'
+}
+
 export type Product = {
     id: number,
     name: string,
     amount: number,
     status: boolean
+    productStatus: ChargeStatus
 }
 
 export type Reservation = {

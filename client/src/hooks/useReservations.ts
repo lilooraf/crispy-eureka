@@ -1,5 +1,5 @@
 import { getReservations } from 'api/reservations';
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 
 import { Reservation } from 'types';
 
@@ -8,7 +8,7 @@ const useReservations = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchReservations = useCallback(async (uuid: string) => {
+  const fetchReservations = async (uuid: string) => {
     try {
       setError(null);
       setLoading(true);
@@ -23,7 +23,7 @@ const useReservations = () => {
     } finally {
       setLoading(false);
     }
-  }, [getReservations]);
+  }
 
   return { data, loading, error, fetchReservations };
 };
